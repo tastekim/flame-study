@@ -1,125 +1,21 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:study/ember_quest.dart';
+
+/// FlameGame 클래스는 component 기반 게임을 구현합니다.
+/// FlameGame 은 component tree 의 root 입니다.
+/// 확장하여 게임 로직을 추가하거나 해당 로직을 child component 에 유지할 수 있습니다.
+
+/// Position: 상위 구성 요소를 기준으로 구성 요소의 앵커 위치를 Vector2 형식으로 나타냅니다.
+/// Size: 구성 요소의 논리적 크기입니다. 주로 탭 및 충돌 감지에 사용됩니다. 따라서 크기는 렌더링된 그림의 대략적인 경계 사각형과 같아야 합니다. PositionComponent 크기를 지정하지 않으면 0이 되며 구성 요소는 탭에 응답할 수 없습니다.
+/// Scale: 구성 요소의 배율입니다. 배율은 X 및 Y 치수에 따라 구분될 수 있습니다. 1보다 작은 배율은 구성 요소를 더 작게 만들고 1보다 큰 구성 요소를 더 크게 만듭니다. 스케일은 음수일 수도 있으며, 이로 인해 해당 축을 따라 거울 반사가 발생합니다.
+/// Anchor: 이 지점은 구성 요소의 논리적 "중심" 또는 Flame 구성 요소를 잡는 지점으로 간주됩니다. 모든 변환은 이 지점 주변에서 발생합니다.
+/// Angle: 구성 요소의 회전 각도(라디안)입니다. 각도가 양수이면 구성 요소는 기준점을 중심으로 시계 방향으로 회전하고, 각도가 음수이면 시계 반대 방향으로 회전합니다.
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
+  runApp(
+    const GameWidget<EmberQuestGame>.controlled(
+      gameFactory: EmberQuestGame.new,
+    ),
+  );
 }
