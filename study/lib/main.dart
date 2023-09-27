@@ -1,6 +1,10 @@
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:study/ember_quest.dart';
+import 'package:study/overlays/game_over.dart';
+import 'package:study/overlays/main_menu.dart';
 
 /// FlameGame 클래스는 component 기반 게임을 구현합니다.
 /// FlameGame 은 component tree 의 root 입니다.
@@ -13,9 +17,17 @@ import 'package:study/ember_quest.dart';
 /// Angle: 구성 요소의 회전 각도(라디안)입니다. 각도가 양수이면 구성 요소는 기준점을 중심으로 시계 방향으로 회전하고, 각도가 음수이면 시계 반대 방향으로 회전합니다.
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // 가로 모드
+  Flame.device.setLandscape();
   runApp(
-    const GameWidget<EmberQuestGame>.controlled(
+    GameWidget<EmberQuestGame>.controlled(
       gameFactory: EmberQuestGame.new,
+      overlayBuilderMap: {
+        'MainMenu': (_, game) => MainMenu(game: game),
+        'GameOver': (_, game) => GameOver(game: game),
+      },
+      initialActiveOverlays: const ['MainMenu'],
     ),
   );
 }
